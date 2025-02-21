@@ -38,18 +38,18 @@ jobs:
       # Build the book
       - name: Build the book
         run: |
-          jupyter-book build polars_guide
+          jupyter-book build thinking_code
 
       # Copy a custom HTML file to the build folder
-      - name: Copy custom HTML to the build folder
-        run: |
-          cp google608cb34058acb7c0.html polars_guide/_build/html/          
+      #- name: Copy custom HTML to the build folder
+      #  run: |
+      #    cp google608cb34058acb7c0.html polars_guide/_build/html/          
 
       # Upload the book's HTML as an artifact
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "polars_guide/_build/html"
+          path: "thinking_code/_build/html"
 
       # Deploy the book's HTML to GitHub Pages
       - name: Deploy to GitHub Pages
