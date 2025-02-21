@@ -1,0 +1,25 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: index
+
+parts:
+    - caption: Z3
+      chapters:
+        - file: z3_what_is_csp
+        - file: z3_intro
+        - file: z3_optimize_coin_sum
+        - file: z3_minesweeper
+        - file: z3_sports
+        - file: z3_ten_questions
+        - file: z3_number_24
+        - file: z3_insert_operators
+        - file: z3_crack_lcg
+        - file: z3_gray_code
+        - file: z3_break_crc
+        - file: z3_data_types
+    - caption: PySat
+      chapters:
+        - file: sat_sudoku
+        - file: sat_nonogram
