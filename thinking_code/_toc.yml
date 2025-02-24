@@ -17,7 +17,6 @@ parts:
         - file: z3_insert_operators
         - file: z3_knight_tour
         - file: z3_number_link
-        - file: z3_shikaku
         - file: z3_crack_lcg
         - file: z3_gray_code
         - file: z3_break_crc
@@ -26,3 +25,4 @@ parts:
       chapters:
         - file: sat_sudoku
         - file: sat_nonogram
+        - file: sat_shikaku
