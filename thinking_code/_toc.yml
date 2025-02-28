@@ -26,3 +26,6 @@ parts:
         - file: sat_sudoku
         - file: sat_nonogram
         - file: sat_shikaku
+    - caption: OrTools
+      chapters:
+        - file: ortools-sat_intro
