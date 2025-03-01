@@ -41,7 +41,7 @@ jobs:
           jupyter-book build thinking_code
 
       # Copy a custom HTML file to the build folder
-      #- name: Copy custom HTML to the build folder
+      - name: Copy custom HTML to the build folder
         run: |
           cp google608cb34058acb7c0.html thinking_code/_build/html/          
 
