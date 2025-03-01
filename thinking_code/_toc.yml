@@ -30,3 +30,4 @@ parts:
       chapters:
         - file: ortools-sat_intro
         - file: ortools-sat_api
+        - file: ortools-sat_nonogram
