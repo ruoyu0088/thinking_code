@@ -64,3 +64,43 @@ def is_between(expr, lb, ub):
 def is_not_between(expr, lb, ub):
     domain = cp_model.Domain.from_flat_intervals([cp_model.INT_MIN, lb - 1, ub + 1, cp_model.INT_MAX])
     return cp_model.BoundedLinearExpression(expr, domain)
+
+def create_circuit_model(edges, include_edges=[]):
+    edges = set(edges)
+    model = cp_model.CpModel()
+    if include_edges:
+        for edge in include_edges:
+            if edge not in edges:
+                edges.add(edge)
+    variables = {key:model.new_bool_var(str(key)) for key in edges}
+    if include_edges:
+        model.add_bool_and([variables[edge] for edge in include_edges])
+    model.add_circuit([(s, e, v) for (s, e), v in variables.items()])
+    return model, variables
+
+def get_circuit(solution, start=None):
+    # 回路の形成に使われる辺のうち、回路に含まれるものを選択し、自己ループは除外
+    solution = {s: e for (s, e), v in solution.items() if v and s != e}
+    if start is None:
+        start = next(iter(solution.keys()))  # 開始頂点を設定（デフォルトでは最初の頂点）
+    path = [start]
+    while True:
+        if start not in solution:
+            break  # 回路が完成したので終了
+        start = solution[start]
+        if start in path:
+            break  # 回路が閉じたので終了
+        path.append(start)
+    return path
+
+def find_all_circuits(edges, include_edges=[], start=None):
+    model, variables = create_circuit_model(edges, include_edges)
+    solutions = get_all_solutions(model, variables)  # 解のリストを取得
+    return [get_circuit(sol, start) for sol in solutions]  # 各解に対して回路を求める
+
+def find_one_circuit(edges, include_edges=[], start=None):
+    model, variables = create_circuit_model(edges, include_edges)
+    solver = cp_model.CpSolver()
+    solver.solve(model)  # 最適解を求める
+    sol = {key: solver.value(v) for key, v in variables.items()}  # 解を取得
+    return get_circuit(sol, start)  # 回路を取得    
