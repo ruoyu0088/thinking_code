@@ -29,3 +29,4 @@ parts:
     - caption: OrTools
       chapters:
         - file: ortools-sat_intro
+        - file: ortools-sat_api
