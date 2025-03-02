@@ -33,3 +33,4 @@ parts:
         - file: ortools-sat_nonogram
         - file: ortools-sat_circuit
         - file: ortools-sat_number_link
+        - file: ortools-sat_pentominos
