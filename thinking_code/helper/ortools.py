@@ -13,9 +13,10 @@ def process_nested_struct(data, func):
 
 
 class AllSolutions(CpSolverSolutionCallback):
-    def __init__(self, model):
+    def __init__(self, model, max_length=None):
         super().__init__()
         self.model = model
+        self.max_length = max_length
         self.solutions = []
 
     def OnSolutionCallback(self):
@@ -24,14 +25,17 @@ class AllSolutions(CpSolverSolutionCallback):
         else:
             solution = process_nested_struct(self.model, self.Value)
         self.solutions.append(solution)
+        if self.max_length is not None:
+            if len(self.solutions) >= self.max_length:
+                self.StopSearch()
 
 
-def get_all_solutions(model, variables=None):
+def get_all_solutions(model, variables=None, max_length=None):
     solver = CpSolver()
     solver.parameters.enumerate_all_solutions = True
     if variables is None:
         variables = model
-    solutions = AllSolutions(variables)
+    solutions = AllSolutions(variables, max_length=max_length)
     solver.solve(model, solutions)
     return solutions.solutions
 
