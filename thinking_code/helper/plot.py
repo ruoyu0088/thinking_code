@@ -62,3 +62,32 @@ def plot_slither_link_board(board, result=None):
     ax.autoscale_view()        
     ax.axis('off')
     return fig, ax
+
+def plot_nonogram_board(puzzle, solution, font_size=12):
+    solution = np.asarray(solution)
+    nrow, ncol = solution.shape
+    
+    fig, ax = plt.subplots(figsize=(nrow * 0.2, ncol * 0.2))
+    ax.set_aspect("equal")
+
+    Y, X = np.ogrid[:nrow, :ncol]
+    
+    font = dict(fontsize=font_size)
+
+    ax.set_yticks(Y.ravel() - 0.5)
+    y_ticks = [" ".join(str(c) for c in item) for item in puzzle['rows']]
+    ax.set_yticklabels(y_ticks, fontdict=font)
+
+    ax.set_xticks(X.ravel() - 0.5)
+    x_ticks = ["\n".join(str(c) for c in item) for item in puzzle['cols']]
+    ax.set_xticklabels(x_ticks, fontdict=font)
+
+    ax.set_xlim(-1, X.max())
+    ax.set_ylim(-1, Y.max())
+
+    ax.pcolormesh(X-0.5, Y-0.5, solution, vmin=0, vmax=1.5, 
+                  cmap="gray_r", edgecolors="white", shading="auto")
+    ax.invert_yaxis()
+    for edge in ("right", "top"):
+        ax.spines[edge].set_visible(False) 
+    return fig, ax    

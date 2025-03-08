@@ -52,3 +52,24 @@ def extract_number_link(json_str=""):
     height = pdata['gridHeight']
     numbers = pdata['data']['startingGrid']
     return np.array(numbers).reshape(height, width)
+
+def extract_nonogram(html=""):
+    def read_table_content(table):
+        data = []
+        rows = table.find_all('tr')
+        for row in rows:
+            cols = row.find_all('td')
+            cols = [ele.text.strip() for ele in cols]
+            data.append([ele for ele in cols]) 
+        return data
+
+    if not html:
+        html = pyperclip.paste()
+        
+    soup = BeautifulSoup(html, 'html.parser')
+    table_top = soup.find(class_='nmtt')
+    table_left = soup.find(class_='nmtl')
+    cols = [[int(v) for v in line if v] for line in zip(*read_table_content(table_top))]
+    rows = [[int(v) for v in line if v] for line in read_table_content(table_left)]
+
+    return {"rows":rows, "cols":cols}
