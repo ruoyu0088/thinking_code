@@ -1,12 +1,17 @@
+import json
+import re
 from bs4 import BeautifulSoup
 import polars as pl
 import numpy as np
-import re
+import pyperclip 
 
-def extract_slither_link(html):
+
+def extract_slither_link(html=""):
     """
     extract puzzle from https://ja.puzzle-loop.com
     """
+    if not html:
+        html = pyperclip.paste()
     soup = BeautifulSoup(html, "html.parser")
     cells = []
     
@@ -34,3 +39,16 @@ def extract_slither_link(html):
         .get_column('text').to_list()
     )
     return board
+
+def extract_number_link(json_str=""):
+    """
+    extract puzzle from https://puzzlemadness.co.uk/numberlink/medium
+    """
+    if not json_str:
+        json_str = pyperclip.paste()
+    data = json.loads(json_str)
+    pdata = data['puzzleData']
+    width = pdata['gridWidth']
+    height = pdata['gridHeight']
+    numbers = pdata['data']['startingGrid']
+    return np.array(numbers).reshape(height, width)
