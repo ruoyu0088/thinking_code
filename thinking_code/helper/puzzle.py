@@ -73,3 +73,25 @@ def extract_nonogram(html=""):
     rows = [[int(v) for v in line if v] for line in read_table_content(table_left)]
 
     return {"rows":rows, "cols":cols}
+
+def extract_shikaku(html=""):
+    if not html:
+        html = pyperclip.paste()
+    
+    soup = BeautifulSoup(html, 'html.parser')
+    cells = soup.find_all('div', class_='cell')
+    board = []
+    last_top = ''
+    for cell in cells:
+        style = dict([[s.strip() for s in item.split(':')] for item in cell.attrs['style'].split(';') if item])
+        top = style['top']
+        if last_top != top:
+            board.append([])
+            last_top = top
+        number = cell.text
+        if not number:
+            number = 0
+        else:
+            number = int(number)
+        board[-1].append(number)
+    return board        

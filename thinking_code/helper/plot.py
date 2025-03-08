@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.collections import LineCollection
 from matplotlib.cm import tab20
+from itertools import cycle
 
 
 def plot_number_link_board(board, links=None, cells=None):
@@ -91,3 +92,28 @@ def plot_nonogram_board(puzzle, solution, font_size=12):
     for edge in ("right", "top"):
         ax.spines[edge].set_visible(False) 
     return fig, ax    
+
+def plot_shikaku_board(board, rects=[], figsize=(6, 6)):
+    height, width = board.shape
+    Y, X = np.where(board > 0)
+    V = board[Y, X]
+    
+    colors = cycle(tab20.colors)
+    fig, ax = plt.subplots(figsize=figsize)
+    for rect in rects:
+        x, y, w, h = rect
+        ax.add_patch(plt.Rectangle((x, y), w, h, facecolor=next(colors), edgecolor='black', alpha=0.5))
+    
+    for x, y, v in zip(X, Y, V):
+        ax.text(x + 0.5, y + 0.5, str(v), fontsize=14, ha='center', va='center')
+    
+    y, x = np.mgrid[:height, :width]
+    
+    ax.scatter(x.ravel() + 0.5, y.ravel() + 0.5, s=1, marker='s')
+    
+    ax.set_xlim(0-0.1, width+0.1)
+    ax.set_ylim(0-0.1, height+0.1)
+    ax.invert_yaxis()
+    ax.set_aspect('equal')
+    ax.axis('off')
+    return fig, ax
