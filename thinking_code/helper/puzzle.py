@@ -94,4 +94,42 @@ def extract_shikaku(html=""):
         else:
             number = int(number)
         board[-1].append(number)
-    return board        
+    return board       
+
+def extract_masyu(html=""):
+    if not html:
+        html = pyperclip.paste()
+        
+    soup = BeautifulSoup(html, 'html.parser')
+    
+    divs = soup.find_all('div', class_='loop-dot')
+    
+    results = []
+    for div in divs:
+        class_attr = div.get('class', [])
+        style = div.get('style', '')
+    
+        # Extract top and left from style
+        top = left = None
+        for rule in style.split(';'):
+            rule = rule.strip()
+            if rule.startswith('top:'):
+                top = rule.split(':')[1].strip()
+            elif rule.startswith('left:'):
+                left = rule.split(':')[1].strip()
+    
+        dot = 0
+        if 'dot-white' in class_attr:
+            dot = 1
+        elif 'dot-black' in class_attr:
+            dot = 2
+        top = int(top.replace('px', ''))
+        left = int(left.replace('px', ''))
+        results.append({'dot': dot, 'top': top, 'left': left})
+    return (
+        pl.DataFrame(results)
+        .sort('top', 'left')
+        .pivot('left', index='top')
+        .drop('top')
+        .to_numpy()
+    )    
