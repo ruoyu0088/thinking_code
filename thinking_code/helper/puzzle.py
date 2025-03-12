@@ -133,3 +133,27 @@ def extract_masyu(html=""):
         .drop('top')
         .to_numpy()
     )    
+
+def extract_yinyang(html=""):
+    if not html:
+        html = pyperclip.paste()
+    
+    soup = BeautifulSoup(html, "html.parser")
+    result = []
+    
+    for div in soup.find_all("div", class_=["cell-off", "cell-0", "cell-1"]):
+        style = div.get("style", "")
+        styles = dict(item.split(": ") for item in style.split("; ") if ": " in item)
+
+        for cell_type, cell_class in enumerate(['cell-off', 'cell-1', 'cell-0']):
+            if cell_class in div["class"]:
+                break
+        
+        result.append({
+            "class": cell_type,
+            "top": int(styles.get("top", "0px").replace("px", "")),
+            "left": int(styles.get("left", "0px").replace("px", ""))
+        })
+
+    arr = pl.DataFrame(result).sort('top', 'left').pivot('left', index='top').drop('top').to_numpy()
+    return arr

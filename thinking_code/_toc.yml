@@ -35,5 +35,6 @@ parts:
         - file: ortools-sat_circuit
         - file: ortools-sat-slither_link
         - file: ortools-sat-masyu
+        - file: ortools-sat-yinyang
         - file: ortools-sat_number_link
         - file: ortools-sat-TSP

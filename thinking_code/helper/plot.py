@@ -117,3 +117,64 @@ def plot_shikaku_board(board, rects=[], figsize=(6, 6)):
     ax.set_aspect('equal')
     ax.axis('off')
     return fig, ax
+
+
+def plot_masyu_board(puzzle, route):
+    h, w = puzzle.shape
+    fig, ax = plt.subplots(figsize=(w * 0.3, h * 0.3))
+    segments = []
+    for n1, n2 in route:
+        r1, c1 = n1 // w, n1 % w
+        r2, c2 = n2 // w, n2 % w
+        segments.append([(c1, r1), (c2, r2)])
+    
+    ax.add_collection(LineCollection(segments, color='black'))
+    
+    r, c = np.where(puzzle == 1)
+    ax.scatter(c, r, s=100, marker='o', facecolor="none", edgecolor="black")
+    r, c = np.where(puzzle == 2)
+    ax.scatter(c, r, s=100, marker='o', facecolor="black", edgecolor="black")
+    ax.set_aspect('equal')
+    ax.invert_yaxis()
+    ax.axis('off')
+    return fig, ax
+
+def plot_yinyang(puzzle, cells=None, numbers=None, edges=None, scale=0.3):
+    h, w = puzzle.shape
+    fig, ax = plt.subplots(figsize=(w * scale, h * scale))
+
+    if cells is not None:
+        xs = []
+        ys = []
+        colors = []
+        for (y, x), v in cells.items():
+            xs.append(x)
+            ys.append(y)
+            colors.append('white' if v == 0 else 'black')
+        ax.scatter(xs, ys, s=80 * scale / 0.1, c=colors)        
+
+    if numbers:
+        for (r, c), num in numbers.items():
+            color = 'black' if cells[r, c] == 0 else 'white'
+            ax.text(c, r, str(num), color=color, size=9)
+
+    if edges:
+        segments = []
+        for r1, c1, r2, c2 in edges:
+            segments.append([(c1, r1), (c2, r2)])
+        ax.add_collection(LineCollection(segments, alpha=0.7))
+    
+    y, x = np.where(puzzle == 1)
+    ax.scatter(x, y, s=8, edgecolor="#000000", facecolor="none")
+    
+    y, x = np.where(puzzle == 2)
+    ax.scatter(x, y, s=8, edgecolor="#ffffff", facecolor="none")
+    
+    ax.set_aspect('equal')
+    fig.patch.set_facecolor('#777777')
+
+    ax.set_xlim(-0.5, w - 0.5)
+    ax.set_ylim(-0.5, h - 0.5)
+    ax.invert_yaxis()    
+    ax.axis('off')
+    return fig, ax
