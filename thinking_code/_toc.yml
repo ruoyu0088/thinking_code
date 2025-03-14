@@ -21,6 +21,7 @@ parts:
         - file: z3_gray_code
         - file: z3_break_crc
         - file: z3_data_types
+        - file: z3_fixedpoint
     - caption: PySat
       chapters:
         - file: sat_sudoku
