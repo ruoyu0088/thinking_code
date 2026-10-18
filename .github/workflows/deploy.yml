@@ -1,57 +1,66 @@
 name: deploy-book
 
 on:
-  # Trigger the workflow on push to main branch
   push:
     branches:
       - main
-
-env:
-  BASE_URL: /${{ github.event.repository.name }}
+  workflow_dispatch:
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  deploy-book:
+  build-deploy:
     runs-on: ubuntu-latest
     # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
     permissions:
       pages: write
       id-token: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      # Install dependencies
       - name: Set up Python 3.11
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.11
+          python-version: "3.11"
+          cache: pip
 
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
 
-      # Build the book
-      - name: Build the book
+      # 日本語版 → site/ja/
+      - name: Build Japanese book
         run: |
           jupyter-book build thinking_code
 
-      # Copy a custom HTML file to the build folder
-      - name: Copy custom HTML to the build folder
+      # 中文版 → site/zh/（まだ無い場合はスキップ）
+      - name: Build Chinese book
+        if: ${{ hashFiles('thinking_code_cn/_toc.yml') != '' }}
         run: |
-          cp google608cb34058acb7c0.html thinking_code/_build/html/          
+          jupyter-book build thinking_code_cn
 
-      # Upload the book's HTML as an artifact
+      # 1つのサイトにまとめる：/ に言語振り分け、/ja/ と /zh/ に各言語版
+      - name: Assemble site
+        run: |
+          set -e
+          rm -rf site
+          mkdir -p site/ja site/zh
+          cp -r thinking_code/_build/html/. site/ja/
+          if [ -d thinking_code_cn/_build/html ]; then
+            cp -r thinking_code_cn/_build/html/. site/zh/
+          fi
+          cp index_redirect.html site/index.html
+          cp 404.html site/404.html
+          cp google608cb34058acb7c0.html site/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "thinking_code/_build/html"
+          path: "site"
 
-      # Deploy the book's HTML to GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

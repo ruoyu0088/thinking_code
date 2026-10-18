@@ -22,8 +22,8 @@ bibtex_bibfiles:
 
 repository:
   url: https://github.com/ruoyu0088/thinking_code
-  branch: master
-  path_to_book: polars_guide
+  branch: main
+  path_to_book: thinking_code
 
 html:
   use_repository_button: true
@@ -31,7 +31,11 @@ html:
 
 sphinx:
   config:
-    site_url: "https://ruoyu0088.github.io/thinking_code/"
+    site_url: "https://ruoyu0088.github.io/thinking_code/ja/"
+    sitemap_url_scheme: "{link}"
+    language: ja
+    html_js_files:
+      - lang-switch.js
 
   extra_extensions:
    - sphinxcontrib.mermaid

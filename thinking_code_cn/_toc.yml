@@ -1,0 +1,38 @@
+# 由 tools/check_sync.py --update-toc 生成：只列出已翻译的章节
+format: jb-book
+root: index
+parts:
+- caption: Z3
+  chapters:
+  - file: z3_what_is_csp
+  - file: z3_intro
+  - file: z3_optimize_coin_sum
+  - file: z3_minesweeper
+  - file: z3_sports
+  - file: z3_ten_questions
+  - file: z3_number_24
+  - file: z3_insert_operators
+  - file: z3_knight_tour
+  - file: z3_number_link
+  - file: z3_crack_lcg
+  - file: z3_gray_code
+  - file: z3_break_crc
+  - file: z3_data_types
+  - file: z3_fixedpoint
+- caption: PySat
+  chapters:
+  - file: sat_sudoku
+  - file: sat_nonogram
+  - file: sat_shikaku
+- caption: OrTools
+  chapters:
+  - file: ortools-sat_intro
+  - file: ortools-sat_api
+  - file: ortools-sat_nonogram
+  - file: ortools-sat_pentominos
+  - file: ortools-sat_circuit
+  - file: ortools-sat-slither_link
+  - file: ortools-sat-masyu
+  - file: ortools-sat-yinyang
+  - file: ortools-sat_number_link
+  - file: ortools-sat-TSP
