@@ -11,10 +11,4 @@ thinking_code/pyrightconfig.json
 thinking_code_cn/.sync_state.json
 AGENTS.md
 STYLE_HANDOFF.md
-tools/nbedit.py
-tools/zh_auto_merge.py
-tools/zh_flow_lint.py
-tools/zh_sentence_dump.py
-tools/zh_style_lint.py
-tools/zh_term_check.py
-tools/zh_tune_hint.py
+tools/
