@@ -1,14 +1,20 @@
 #!/usr/bin/env python3
-"""polars_guide 用：在本地执行 notebook 并把输出写回。
+"""thinking_code_cn 用：在本地执行 notebook 并把输出写回。
 
-用法:
-    python tools/exec_notebook.py polars_guide/005_polars_vs_pandas.ipynb [more ...]
+用法（书根目录下）:
 
-必须用 C:\\pixi_env 的 python（polars 2.0 / hvplot / geoviews / pyarrow 都在里面）。
+    python tools/exec_notebook.py thinking_code_cn/z3_intro.ipynb [more ...]
 
-写回规则（与 scipybook 一致，避免无意义 diff）:
+必须用 C:\\pixi_env 的 python（z3-solver / python-sat / ortools / numpy / scipy /
+sympy / matplotlib 都在里面），并设 MKL_THREADING_LAYER=TBB。
+
+写回规则（为了避免无意义 diff）:
 - 删掉 nbclient 塞进 cell metadata 的 execution 时间戳
-- 保持文件原来的行尾（CRLF / LF）
+- 保持文件原来的行尾（本书是 CRLF）
+- **末尾不加换行**（本书所有 notebook 都不以换行结尾）
+
+⚠️ 只对确实需要刷新输出的章节运行；本项目的正文润色不改 code cell，
+因此日常校对不需要执行它。
 """
 from __future__ import annotations
 
@@ -29,9 +35,8 @@ def _write_like(original_bytes: bytes, nb, path: Path) -> None:
     if text.endswith("\n"):
         text = text[:-1]
     if b"\r\n" in original_bytes:
-        path.write_bytes(text.replace("\n", "\r\n").encode("utf-8") + b"\r\n")
-    else:
-        path.write_bytes(text.encode("utf-8") + b"\n")
+        text = text.replace("\n", "\r\n")
+    path.write_bytes(text.encode("utf-8"))
 
 
 def run(path: Path) -> bool:
