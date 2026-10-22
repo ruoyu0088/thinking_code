@@ -83,28 +83,28 @@ def create_circuit_model(edges, include_edges=[]):
     return model, variables
 
 def get_circuit(solution, start=None):
-    # 回路の形成に使われる辺のうち、回路に含まれるものを選択し、自己ループは除外
+    # Keep the edges used by the circuit and drop self-loops.
     solution = {s: e for (s, e), v in solution.items() if v and s != e}
     if start is None:
-        start = next(iter(solution.keys()))  # 開始頂点を設定（デフォルトでは最初の頂点）
+        start = next(iter(solution.keys()))  # Default to the first vertex.
     path = [start]
     while True:
         if start not in solution:
-            break  # 回路が完成したので終了
+            break  # The circuit is complete.
         start = solution[start]
         if start in path:
-            break  # 回路が閉じたので終了
+            break  # The circuit is closed.
         path.append(start)
     return path
 
 def find_all_circuits(edges, include_edges=[], start=None):
     model, variables = create_circuit_model(edges, include_edges)
-    solutions = get_all_solutions(model, variables)  # 解のリストを取得
-    return [get_circuit(sol, start) for sol in solutions]  # 各解に対して回路を求める
+    solutions = get_all_solutions(model, variables)  # Enumerate all solutions.
+    return [get_circuit(sol, start) for sol in solutions]  # Reconstruct each circuit.
 
 def find_one_circuit(edges, include_edges=[], start=None):
     model, variables = create_circuit_model(edges, include_edges)
     solver = cp_model.CpSolver()
-    solver.solve(model)  # 最適解を求める
-    sol = {key: solver.value(v) for key, v in variables.items()}  # 解を取得
-    return get_circuit(sol, start)  # 回路を取得    
+    solver.solve(model)  # Find one optimal solution.
+    sol = {key: solver.value(v) for key, v in variables.items()}  # Read the values.
+    return get_circuit(sol, start)  # Reconstruct the circuit.
